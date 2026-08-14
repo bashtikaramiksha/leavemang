@@ -8,6 +8,38 @@
   <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
 </head>
 <body>
-  {{template "content" .}}
+  {{if .User}}
+  <header class="top-navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">🌴 LeaveManager</a>
+      <nav class="nav-menu">
+        <a href="/" class="top-nav-item">Home</a>
+        <a href="/my/dashboard" class="top-nav-item">Dashboard</a>
+        <a href="/my/leave-requests" class="top-nav-item">Leave History</a>
+        <a href="/my/leave-requests/new" class="top-nav-item">+ Apply Leave</a>
+        {{if or (eq .User.Role "admin") (eq .User.Role "manager")}}
+          <a href="/manager/dashboard" class="top-nav-item manager-badge-nav">Manager Dashboard</a>
+        {{end}}
+        {{if eq .User.Role "admin"}}
+          <a href="/admin" class="top-nav-item admin-badge-nav">Admin Portal</a>
+        {{end}}
+        <a href="/notifications" class="top-nav-item" style="display: flex; align-items: center; gap: 0.35rem;">
+          Notifications
+          <span id="unread-badge" hx-get="/notifications/unread-count" hx-trigger="load, every 10s" hx-swap="outerHTML">🔔</span>
+        </a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-name">👤 {{.User.Username}} <small>({{.User.Role}})</small></span>
+        <form hx-post="/logout" style="margin: 0; display: inline;">
+          <button type="submit" class="btn-logout">Logout</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  {{end}}
+
+  <main class="main-content">
+    {{template "content" .}}
+  </main>
 </body>
 </html>

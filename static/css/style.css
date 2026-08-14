@@ -29,19 +29,129 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Top Navbar for Desktop Layout */
+.top-navbar {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.nav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0.85rem 2rem;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-decoration: none;
+  background: linear-gradient(135deg, #a5b4fc, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.top-nav-item {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.top-nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.manager-badge-nav {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.admin-badge-nav {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.user-name small {
+  color: #818cf8;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.btn-logout {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  padding: 1rem 0 3rem 0;
 }
 
 .container {
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
 }
 
+/* Desktop container width expansion */
 .dashboard-container {
   width: 100%;
-  max-width: 720px;
+  max-width: 1200px !important;
+  margin: 1.5rem auto !important;
+  padding: 0 1.5rem;
 }
 
 .card {
@@ -126,6 +236,17 @@ body {
 .btn-primary:hover {
   background: linear-gradient(135deg, #4f46e5, #4338ca);
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 .btn-danger {
