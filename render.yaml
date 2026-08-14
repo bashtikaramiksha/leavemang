@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: leavemang
+    env: go
+    buildCommand: CGO_ENABLED=0 go build -o server ./cmd/server/main.go
+    startCommand: ./server
+    envVars:
+      - key: PORT
+        value: 10000
