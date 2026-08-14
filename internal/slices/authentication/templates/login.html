@@ -23,6 +23,50 @@
 
       <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Sign In</button>
     </form>
+
+    <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+      <h3 style="font-size: 0.85rem; font-weight: 700; color: #a5b4fc; margin: 0 0 0.75rem 0; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 0.35rem;">
+        🔑 Demo Login Credentials
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6); padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+          <div>
+            <span style="color: #a5b4fc; font-weight: 600;">Employee:</span>
+            <code style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1); padding: 0.1rem 0.35rem; border-radius: 4px;">rahul</code>
+            <span style="color: #64748b; margin: 0 0.2rem;">/</span>
+            <code style="color: #cbd5e1; background: rgba(255, 255, 255, 0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">password123</code>
+          </div>
+          <button type="button" onclick="fillCreds('rahul', 'password123')" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px;">Fill</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6); padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+          <div>
+            <span style="color: #fbbf24; font-weight: 600;">Manager:</span>
+            <code style="color: #fbbf24; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 0.1rem 0.35rem; border-radius: 4px;">priya</code>
+            <span style="color: #64748b; margin: 0 0.2rem;">/</span>
+            <code style="color: #cbd5e1; background: rgba(255, 255, 255, 0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">password123</code>
+          </div>
+          <button type="button" onclick="fillCreds('priya', 'password123')" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px;">Fill</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.6); padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+          <div>
+            <span style="color: #f43f5e; font-weight: 600;">Admin:</span>
+            <code style="color: #f43f5e; font-weight: bold; background: rgba(244, 63, 94, 0.1); padding: 0.1rem 0.35rem; border-radius: 4px;">amit</code>
+            <span style="color: #64748b; margin: 0 0.2rem;">/</span>
+            <code style="color: #cbd5e1; background: rgba(255, 255, 255, 0.05); padding: 0.1rem 0.35rem; border-radius: 4px;">password123</code>
+          </div>
+          <button type="button" onclick="fillCreds('amit', 'password123')" class="btn btn-secondary" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px;">Fill</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<script>
+function fillCreds(u, p) {
+  document.getElementById('username').value = u;
+  document.getElementById('password').value = p;
+}
+</script>
 {{end}}
