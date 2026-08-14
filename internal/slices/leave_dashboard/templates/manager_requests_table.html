@@ -1,0 +1,68 @@
+{{define "manager_requests_table.html"}}
+<div id="requests-table-container" style="overflow-x: auto;">
+  {{if .Requests}}
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem;">
+      <thead>
+        <tr style="background: rgba(15, 23, 42, 0.8); text-align: left; color: #94a3b8;">
+          <th style="padding: 0.85rem 1rem; border-top-left-radius: 10px; border-bottom: 1px solid var(--border-color);">Employee</th>
+          <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Leave Type</th>
+          <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Dates</th>
+          <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); text-align: center;">Days</th>
+          <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Reason</th>
+          <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); text-align: center;">Status</th>
+          <th style="padding: 0.85rem 1rem; border-top-right-radius: 10px; border-bottom: 1px solid var(--border-color); text-align: right;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Requests}}
+        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer;" onclick="window.location='/manager/leave-requests/{{.ID}}'" onmouseover="this.style.background='rgba(15, 23, 42, 0.4)'" onmouseout="this.style.background='transparent'">
+          <td style="padding: 1rem;">
+            <strong style="color: #f8fafc; display: block;">{{.EmployeeName}}</strong>
+            <span style="font-size: 0.8rem; color: #94a3b8;">{{.Department}} ({{.EmployeeCode}})</span>
+          </td>
+          <td style="padding: 1rem;">
+            <strong style="color: #cbd5e1; display: block;">{{.LeaveTypeName}}</strong>
+            <span style="font-size: 0.8rem; color: #a5b4fc; font-family: monospace;">{{.LeaveTypeCode}}</span>
+          </td>
+          <td style="padding: 1rem; color: #cbd5e1;">
+            {{.FromDate}} → {{.ToDate}}
+          </td>
+          <td style="padding: 1rem; text-align: center;">
+            <span style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px;">
+              {{.Days}} {{if eq .Days 1}}day{{else}}days{{end}}
+            </span>
+          </td>
+          <td style="padding: 1rem; color: #94a3b8; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            {{.Reason}}
+          </td>
+          <td style="padding: 1rem; text-align: center;">
+            {{if eq .Status "Pending"}}
+              <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                ⏳ Pending
+              </span>
+            {{else if eq .Status "Approved"}}
+              <span style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                ✓ Approved
+              </span>
+            {{else if eq .Status "Rejected"}}
+              <span style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                ✕ Rejected
+              </span>
+            {{end}}
+          </td>
+          <td style="padding: 1rem; text-align: right;">
+            <a href="/manager/leave-requests/{{.ID}}" style="color: #818cf8; text-decoration: none; font-weight: 500; font-size: 0.85rem;">
+              Review →
+            </a>
+          </td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  {{else}}
+    <div style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+      No leave requests match the selected filters.
+    </div>
+  {{end}}
+</div>
+{{end}}

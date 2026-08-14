@@ -1,0 +1,80 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 850px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          Notifications 🔔
+          {{if gt .UnreadCount 0}}
+            <span style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border-radius: 9999px; padding: 0.2rem 0.65rem; font-size: 0.85rem; font-weight: 700;">
+              {{.UnreadCount}} unread
+            </span>
+          {{end}}
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Stay updated on your leave requests and approval status
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← Home</a>
+        {{if gt .UnreadCount 0}}
+          <form action="/notifications/read-all" method="POST" style="margin: 0;">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); font-weight: 600;">
+              ✓ Mark All as Read
+            </button>
+          </form>
+        {{end}}
+      </div>
+    </div>
+
+    {{if .Notifications}}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {{range .Notifications}}
+        <div style="background: {{if not .IsRead}}rgba(30, 58, 138, 0.3){{else}}rgba(15, 23, 42, 0.4){{end}}; border: 1px solid {{if not .IsRead}}rgba(99, 102, 241, 0.35){{else}}rgba(255, 255, 255, 0.06){{end}}; border-radius: 12px; padding: 1.25rem; transition: background 0.2s; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="font-size: 1.2rem; line-height: 1; margin-top: 0.15rem;">
+                {{if not .IsRead}}
+                  <span style="color: #6366f1; font-weight: bold;" title="Unread">●</span>
+                {{else}}
+                  <span style="color: #64748b;" title="Read">○</span>
+                {{end}}
+              </span>
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #f8fafc; margin: 0 0 0.35rem 0;">
+                  {{.Title}}
+                </h3>
+                <p style="color: #cbd5e1; font-size: 0.925rem; margin: 0 0 0.75rem 0; line-height: 1.4;">
+                  {{.Message}}
+                </p>
+                <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.8rem; color: #94a3b8;">
+                  <span>🕒 {{.DisplayTimeFormatted}}</span>
+                  {{if .TargetURL}}
+                    <a href="{{.TargetURL}}" style="color: #818cf8; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                      View Request →
+                    </a>
+                  {{end}}
+                </div>
+              </div>
+            </div>
+
+            {{if not .IsRead}}
+              <form action="/notifications/{{.ID}}/read" method="POST" style="margin: 0;">
+                <button type="submit" class="btn btn-secondary" style="padding: 0.3rem 0.65rem; font-size: 0.75rem; background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1);">
+                  Mark Read
+                </button>
+              </form>
+            {{end}}
+          </div>
+        </div>
+        {{end}}
+      </div>
+    {{else}}
+      <div style="text-align: center; padding: 3rem; background: rgba(15, 23, 42, 0.4); border-radius: 12px; color: var(--text-muted);">
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">No notifications found.</p>
+        <p style="font-size: 0.875rem; color: #64748b;">You will receive notifications here when leave applications or approval status changes occur.</p>
+      </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

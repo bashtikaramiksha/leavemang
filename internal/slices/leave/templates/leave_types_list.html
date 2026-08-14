@@ -1,0 +1,74 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 900px;">
+  <div class="card">
+    <div class="header-row" style="margin-bottom: 1.5rem; align-items: center; justify-content: space-between;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin: 0;">Leave Types</h2>
+        <p style="color: var(--text-muted); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+          Configure organizational leave categories, default allocations, and status
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <a href="/" class="nav-link">← Home</a>
+        <a href="/leave-balances" class="nav-link">Allocations</a>
+        <a href="/leave-types/new" class="btn btn-primary" style="width: auto; padding: 0.5rem 1rem;">+ Add Leave Type</a>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="table" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+            <th style="padding: 0.75rem 1rem;">Code</th>
+            <th style="padding: 0.75rem 1rem;">Name</th>
+            <th style="padding: 0.75rem 1rem;">Default Allocation</th>
+            <th style="padding: 0.75rem 1rem;">Status</th>
+            <th style="padding: 0.75rem 1rem; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .LeaveTypes}}
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.85rem 1rem;">
+                <strong style="font-family: monospace; color: #a5b4fc; font-size: 0.95rem;">{{.Code}}</strong>
+              </td>
+              <td style="padding: 0.85rem 1rem;">
+                <div style="font-weight: 600;">{{.Name}}</div>
+                {{if .Description}}<div style="font-size: 0.8rem; color: var(--text-muted);">{{.Description}}</div>{{end}}
+              </td>
+              <td style="padding: 0.85rem 1rem; font-weight: 500;">
+                {{.DefaultAllocation}} days
+              </td>
+              <td style="padding: 0.85rem 1rem;">
+                {{if eq .Status "active"}}
+                  <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4);">Active</span>
+                {{else}}
+                  <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4);">Inactive</span>
+                {{end}}
+              </td>
+              <td style="padding: 0.85rem 1rem; text-align: right; white-space: nowrap;">
+                <a href="/leave-types/{{.ID}}/edit" class="nav-link" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; display: inline-block;">Edit</a>
+                {{if eq .Status "active"}}
+                  <form hx-post="/leave-types/{{.ID}}/deactivate" style="display: inline; margin: 0;" hx-confirm="Are you sure you want to deactivate leave type {{.Name}}?">
+                    <button type="submit" class="btn btn-danger" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; margin-left: 0.35rem;">Deactivate</button>
+                  </form>
+                {{else}}
+                  <form hx-post="/leave-types/{{.ID}}/activate" style="display: inline; margin: 0;">
+                    <button type="submit" class="btn" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; margin-left: 0.35rem; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); width: auto;">Activate</button>
+                  </form>
+                {{end}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                No leave types configured yet.
+              </td>
+            </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{{end}}

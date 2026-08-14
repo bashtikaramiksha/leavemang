@@ -1,0 +1,15 @@
+# Executables
+server.exe
+*.exe
+*.exe.test
+*.out
+
+# Database files
+*.db
+leavemang.db
+
+# Environment & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

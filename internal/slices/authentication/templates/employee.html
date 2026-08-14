@@ -1,0 +1,67 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 720px;">
+  <div class="card">
+    <div class="header-row">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Employee Portal</h2>
+        <div style="margin-top: 0.5rem;">
+          <span class="badge badge-employee">Role: {{.User.Role}}</span>
+        </div>
+      </div>
+      <form hx-post="/logout" style="margin: 0;">
+        <button type="submit" class="btn btn-danger">Logout</button>
+      </form>
+    </div>
+
+    <p style="color: var(--text-muted); margin-bottom: 1.75rem;">
+      Welcome to your Employee Portal, <strong>{{.User.Username}}</strong>. Access your leave balances and employee profile below.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 1.75rem;">
+      <a href="/my/leave-requests/new" style="text-decoration: none; color: inherit;">
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--primary-color); border-radius: 12px; padding: 1.25rem; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📝</div>
+          <h3 style="font-size: 1.1rem; font-weight: 600; color: #a5b4fc; margin-bottom: 0.35rem;">Apply for Leave</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            Submit a new leave request for active leave types.
+          </p>
+        </div>
+      </a>
+
+      <a href="/my/leave-requests" style="text-decoration: none; color: inherit;">
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📋</div>
+          <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">My Leave Requests</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            View history and track status of your submitted applications.
+          </p>
+        </div>
+      </a>
+
+      <a href="/my/leave-balances" style="text-decoration: none; color: inherit;">
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🌴</div>
+          <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">My Leave Balance</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            View your allocated, used, and remaining leave balances.
+          </p>
+        </div>
+      </a>
+
+      <a href="/profile" style="text-decoration: none; color: inherit;">
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👤</div>
+          <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.35rem;">My Profile</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            View your personal details, designation, department, and contact information.
+          </p>
+        </div>
+      </a>
+    </div>
+
+    <div class="portal-nav">
+      <a href="/" class="nav-link">← Back to Main Home</a>
+    </div>
+  </div>
+</div>
+{{end}}

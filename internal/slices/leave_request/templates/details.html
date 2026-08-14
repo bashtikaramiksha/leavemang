@@ -1,0 +1,83 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 650px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0;">Leave Request #{{.Request.ID}}</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Submitted on {{.Request.CreatedAt.Format "02 Jan 2006, 15:04"}}
+        </p>
+      </div>
+      <a href="/my/leave-requests" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← Back to Requests</a>
+    </div>
+
+    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Status:</span>
+        {{if eq .Request.Status "Pending"}}
+          <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ⏳ Pending Approval
+          </span>
+        {{else if eq .Request.Status "Approved"}}
+          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ✓ Approved
+          </span>
+        {{else if eq .Request.Status "Rejected"}}
+          <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ✕ Rejected
+          </span>
+        {{else}}
+          <span class="badge">{{.Request.Status}}</span>
+        {{end}}
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Leave Type</span>
+          <strong style="color: #f8fafc; font-size: 1rem;">{{.Request.LeaveTypeName}} ({{.Request.LeaveTypeCode}})</strong>
+        </div>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Requested Duration</span>
+          <strong style="color: #6366f1; font-size: 1rem;">{{.Request.Days}} {{if eq .Request.Days 1}}day{{else}}days{{end}}</strong>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Start Date</span>
+          <span style="color: #cbd5e1; font-weight: 500;">{{.Request.FromDate}}</span>
+        </div>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">End Date</span>
+          <span style="color: #cbd5e1; font-weight: 500;">{{.Request.ToDate}}</span>
+        </div>
+      </div>
+
+      <div>
+        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Reason</span>
+        <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); padding: 0.85rem 1rem; border-radius: 8px; color: #cbd5e1; font-size: 0.95rem;">
+          {{.Request.Reason}}
+        </div>
+      </div>
+
+      <div>
+        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Applicant Employee</span>
+        <span style="color: #94a3b8; font-size: 0.9rem;">
+          {{.Request.EmployeeName}} ({{.Request.EmployeeCode}}) • {{.Request.Department}}
+        </span>
+      </div>
+
+      {{if .Request.RejectionReason.Valid}}
+      <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 1rem; border-radius: 8px; margin-top: 0.5rem;">
+        <span style="display: block; font-size: 0.85rem; color: #fca5a5; font-weight: 700; margin-bottom: 0.35rem;">Rejection Reason:</span>
+        <div style="color: #fca5a5; font-size: 0.95rem;">
+          {{.Request.RejectionReason.String}}
+        </div>
+      </div>
+      {{end}}
+    </div>
+  </div>
+</div>
+{{end}}

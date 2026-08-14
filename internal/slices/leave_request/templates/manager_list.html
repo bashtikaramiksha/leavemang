@@ -1,0 +1,69 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 950px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.75); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0;">Pending Leave Requests</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Review and decide on employee leave applications
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← Home</a>
+      </div>
+    </div>
+
+    <div style="overflow-x: auto; margin-top: 1rem;">
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem;">
+        <thead>
+          <tr style="background: rgba(15, 23, 42, 0.8); text-align: left; color: #94a3b8;">
+            <th style="padding: 0.85rem 1rem; border-top-left-radius: 10px; border-bottom: 1px solid var(--border-color);">Employee</th>
+            <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Leave Type</th>
+            <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Dates</th>
+            <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); text-align: center;">Days</th>
+            <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Reason</th>
+            <th style="padding: 0.85rem 1rem; border-top-right-radius: 10px; border-bottom: 1px solid var(--border-color); text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Requests}}
+          <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s ease;" onmouseover="this.style.background='rgba(15, 23, 42, 0.4)'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 1rem;">
+              <strong style="color: #f8fafc; display: block;">{{.EmployeeName}}</strong>
+              <span style="font-size: 0.8rem; color: #a5b4fc; font-family: monospace;">{{.EmployeeCode}} ({{.Department}})</span>
+            </td>
+            <td style="padding: 1rem; color: #cbd5e1;">
+              <strong style="color: #f8fafc; display: block;">{{.LeaveTypeName}}</strong>
+              <span style="font-size: 0.8rem; color: #a5b4fc; font-family: monospace;">{{.LeaveTypeCode}}</span>
+            </td>
+            <td style="padding: 1rem; color: #cbd5e1;">
+              {{.FromDate}} → {{.ToDate}}
+            </td>
+            <td style="padding: 1rem; text-align: center;">
+              <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px;">
+                {{.Days}} {{if eq .Days 1}}day{{else}}days{{end}}
+              </span>
+            </td>
+            <td style="padding: 1rem; color: #94a3b8; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              {{.Reason}}
+            </td>
+            <td style="padding: 1rem; text-align: right;">
+              <a href="/manager/leave-requests/{{.ID}}" class="btn btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; text-decoration: none; border-radius: 6px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; font-weight: 600;">
+                View
+              </a>
+            </td>
+          </tr>
+          {{else}}
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 3rem; background: rgba(15, 23, 42, 0.4); border-radius: 12px; margin-top: 1rem;">
+              <p style="font-size: 1.1rem; color: #34d399; font-weight: 600; margin-bottom: 0.25rem;">✓ All caught up!</p>
+              <p style="font-size: 0.95rem; margin: 0;">There are currently no pending leave requests to review.</p>
+            </td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{{end}}

@@ -1,0 +1,57 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 800px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0;">Welcome, {{.User.Username}} 👋</h2>
+        <div style="margin-top: 0.5rem;">
+          <span style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">
+            Role: {{.User.Role}}
+          </span>
+        </div>
+      </div>
+      <form hx-post="/logout" style="margin: 0;">
+        <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Logout</button>
+      </form>
+    </div>
+
+    <p style="color: #94a3b8; margin-bottom: 1.5rem;">
+      Select an option below to navigate through the Leave Management System.
+    </p>
+
+    <h3 style="font-size: 1.1rem; color: #f8fafc; font-weight: 700; margin-bottom: 1rem;">Employee Workspace</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+      <a href="/my/dashboard" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">🌴 My Leave Dashboard</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">View leave balances and recent applications</div>
+      </a>
+      <a href="/my/leave-requests" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">📋 Leave History</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">View status of all past leave requests</div>
+      </a>
+      <a href="/my/leave-requests/new" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">✏️ Apply for Leave</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">Submit a new leave application</div>
+      </a>
+      <a href="/notifications" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">🔔 Notifications</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">View leave request alerts and status updates</div>
+      </a>
+    </div>
+
+    {{if or (eq .User.Role "admin") (eq .User.Role "manager")}}
+    <h3 style="font-size: 1.1rem; color: #f8fafc; font-weight: 700; margin-bottom: 1rem;">Management Workspace</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+      <a href="/manager/dashboard" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#f59e0b'" onmouseout="this.style.borderColor='rgba(245, 158, 11, 0.3)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">📊 Manager Dashboard</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">Team statistics and filtered request approvals</div>
+      </a>
+      <a href="/employees" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: #f8fafc; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#6366f1'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+        <div style="font-size: 1.25rem; margin-bottom: 0.4rem;">👥 Employees Directory</div>
+        <div style="font-size: 0.85rem; color: #94a3b8;">Manage employee records and profiles</div>
+      </a>
+    </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

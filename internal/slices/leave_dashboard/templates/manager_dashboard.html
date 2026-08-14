@@ -1,0 +1,94 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 1000px; margin: 2rem auto;">
+  <!-- Header -->
+  <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 2rem;">
+    <div>
+      <h2 style="font-size: 1.75rem; font-weight: 700; color: #f8fafc; margin: 0;">
+        Manager Leave Dashboard
+      </h2>
+      <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0.35rem;">
+        Team leave statistics, tracking, and request history
+      </p>
+    </div>
+    <div>
+      <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← Home</a>
+    </div>
+  </div>
+
+  <!-- Summary Statistics Cards (AR-10, BR-07) -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 1.25rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+      <div style="font-size: 0.85rem; color: #fbbf24; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Pending Requests</div>
+      <div style="font-size: 2.25rem; font-weight: 800; color: #f8fafc; margin-top: 0.4rem;">
+        {{if .Stats}}{{.Stats.PendingRequests}}{{else}}0{{end}}
+      </div>
+    </div>
+
+    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 1.25rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+      <div style="font-size: 0.85rem; color: #6ee7b7; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Approved Requests</div>
+      <div style="font-size: 2.25rem; font-weight: 800; color: #f8fafc; margin-top: 0.4rem;">
+        {{if .Stats}}{{.Stats.ApprovedRequests}}{{else}}0{{end}}
+      </div>
+    </div>
+
+    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 14px; padding: 1.25rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+      <div style="font-size: 0.85rem; color: #fca5a5; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Rejected Requests</div>
+      <div style="font-size: 2.25rem; font-weight: 800; color: #f8fafc; margin-top: 0.4rem;">
+        {{if .Stats}}{{.Stats.RejectedRequests}}{{else}}0{{end}}
+      </div>
+    </div>
+
+    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 14px; padding: 1.25rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+      <div style="font-size: 0.85rem; color: #a5b4fc; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Total Approved Days</div>
+      <div style="font-size: 2.25rem; font-weight: 800; color: #f8fafc; margin-top: 0.4rem;">
+        {{if .Stats}}{{.Stats.ApprovedDays}}{{else}}0{{end}} <span style="font-size: 1rem; color: #94a3b8; font-weight: 500;">days</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Requests & Filters (AR-07, AR-08, AR-09, Section 17 HTMX) -->
+  <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.75rem 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <h3 style="font-size: 1.3rem; font-weight: 700; color: #f8fafc; margin: 0;">
+        Team Leave Requests
+      </h3>
+
+      <!-- Filters Bar -->
+      <form id="filter-form" 
+            hx-get="/manager/leave-requests" 
+            hx-target="#requests-table-container" 
+            hx-trigger="change from:select"
+            style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+        
+        <div>
+          <label style="font-size: 0.8rem; color: #94a3b8; margin-right: 0.4rem; font-weight: 600;">Status:</label>
+          <select name="status" style="background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-color); padding: 0.45rem 0.85rem; border-radius: 8px; font-size: 0.9rem; outline: none; cursor: pointer;">
+            <option value="all" {{if or (eq .StatusFilter "") (eq .StatusFilter "all")}}selected{{end}}>All Statuses</option>
+            <option value="pending" {{if eq .StatusFilter "pending"}}selected{{end}}>Pending</option>
+            <option value="approved" {{if eq .StatusFilter "approved"}}selected{{end}}>Approved</option>
+            <option value="rejected" {{if eq .StatusFilter "rejected"}}selected{{end}}>Rejected</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; color: #94a3b8; margin-right: 0.4rem; font-weight: 600;">Employee:</label>
+          <select name="employee_id" style="background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid var(--border-color); padding: 0.45rem 0.85rem; border-radius: 8px; font-size: 0.9rem; outline: none; cursor: pointer;">
+            <option value="0">All Employees</option>
+            {{$selectedEmp := .EmployeeIDFilter}}
+            {{range .Employees}}
+              <option value="{{.ID}}" {{if eq .ID $selectedEmp}}selected{{end}}>{{.FirstName}} {{.LastName}} ({{.EmployeeCode}})</option>
+            {{end}}
+          </select>
+        </div>
+
+        <noscript>
+          <button type="submit" class="btn btn-secondary" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;">Filter</button>
+        </noscript>
+      </form>
+    </div>
+
+    <!-- Embedded Table Partial -->
+    {{template "manager_requests_table.html" .}}
+  </div>
+</div>
+{{end}}

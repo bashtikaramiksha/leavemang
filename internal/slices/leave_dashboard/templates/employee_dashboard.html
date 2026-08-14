@@ -1,0 +1,138 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 950px; margin: 2rem auto;">
+  <!-- Welcome Header -->
+  <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 2rem;">
+    <div>
+      <h2 style="font-size: 1.75rem; font-weight: 700; color: #f8fafc; margin: 0;">
+        Welcome, {{if .Employee}}{{.Employee.FirstName}} {{.Employee.LastName}}{{else}}{{.User.Username}}{{end}} 👋
+      </h2>
+      <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 0.35rem;">
+        Here is your leave summary and balance overview
+      </p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="/my/leave-requests/new" class="btn btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.9rem; text-decoration: none; background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+        + Apply for Leave
+      </a>
+    </div>
+  </div>
+
+  <!-- Leave Balance Section (AR-01, AR-02) -->
+  <div style="margin-bottom: 2.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: #f1f5f9; margin: 0;">
+        Leave Balances
+      </h3>
+      <a href="/my/leave-balances" style="color: #818cf8; text-decoration: none; font-size: 0.9rem; font-weight: 500;">View Details →</a>
+    </div>
+
+    {{if .Balances}}
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+        {{range .Balances}}
+        <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 1.25rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span style="font-weight: 700; color: #f8fafc; font-size: 1.1rem;">{{.LeaveTypeName}}</span>
+            <span style="font-size: 0.8rem; color: #a5b4fc; background: rgba(99, 102, 241, 0.2); padding: 0.2rem 0.5rem; border-radius: 6px; font-family: monospace;">{{.LeaveTypeCode}}</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; margin-top: 1rem; background: rgba(15, 23, 42, 0.6); padding: 0.75rem; border-radius: 10px;">
+            <div>
+              <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Allocated</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: #38bdf8; margin-top: 0.2rem;">{{.AllocatedDays}}</div>
+            </div>
+            <div style="border-left: 1px solid rgba(255, 255, 255, 0.1); border-right: 1px solid rgba(255, 255, 255, 0.1);">
+              <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Used</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: #f43f5e; margin-top: 0.2rem;">{{.UsedDays}}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Remaining</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: #34d399; margin-top: 0.2rem;">{{.Remaining}}</div>
+            </div>
+          </div>
+        </div>
+        {{end}}
+      </div>
+    {{else}}
+      <div style="background: rgba(30, 41, 59, 0.5); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 2rem; text-align: center; color: #94a3b8;">
+        No leave balances configured yet.
+      </div>
+    {{end}}
+  </div>
+
+  <!-- Recent Requests Section (AR-03, AR-04, AR-05) -->
+  <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: #f8fafc; margin: 0;">
+        Recent Requests
+      </h3>
+      <a href="/my/leave-requests" class="btn btn-secondary" style="padding: 0.4rem 0.9rem; font-size: 0.85rem; text-decoration: none; border-radius: 6px;">
+        View All Requests →
+      </a>
+    </div>
+
+    {{if .RecentRequests}}
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem;">
+          <thead>
+            <tr style="background: rgba(15, 23, 42, 0.8); text-align: left; color: #94a3b8;">
+              <th style="padding: 0.85rem 1rem; border-top-left-radius: 10px; border-bottom: 1px solid var(--border-color);">Leave Type</th>
+              <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Dates</th>
+              <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); text-align: center;">Days</th>
+              <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color);">Reason</th>
+              <th style="padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-color); text-align: center;">Status</th>
+              <th style="padding: 0.85rem 1rem; border-top-right-radius: 10px; border-bottom: 1px solid var(--border-color); text-align: right;">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range .RecentRequests}}
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer;" onclick="window.location='/my/leave-requests/{{.ID}}'" onmouseover="this.style.background='rgba(15, 23, 42, 0.4)'" onmouseout="this.style.background='transparent'">
+              <td style="padding: 1rem;">
+                <strong style="color: #f8fafc; display: block;">{{.LeaveTypeName}}</strong>
+                <span style="font-size: 0.8rem; color: #a5b4fc; font-family: monospace;">{{.LeaveTypeCode}}</span>
+              </td>
+              <td style="padding: 1rem; color: #cbd5e1;">
+                {{.FromDate}} → {{.ToDate}}
+              </td>
+              <td style="padding: 1rem; text-align: center;">
+                <span style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px;">
+                  {{.Days}} {{if eq .Days 1}}day{{else}}days{{end}}
+                </span>
+              </td>
+              <td style="padding: 1rem; color: #94a3b8; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{.Reason}}
+              </td>
+              <td style="padding: 1rem; text-align: center;">
+                {{if eq .Status "Pending"}}
+                  <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                    ⏳ Pending
+                  </span>
+                {{else if eq .Status "Approved"}}
+                  <span style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                    ✓ Approved
+                  </span>
+                {{else if eq .Status "Rejected"}}
+                  <span style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.35rem 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem;">
+                    ✕ Rejected
+                  </span>
+                {{end}}
+              </td>
+              <td style="padding: 1rem; text-align: right;">
+                <a href="/my/leave-requests/{{.ID}}" style="color: #818cf8; text-decoration: none; font-weight: 500; font-size: 0.85rem;">
+                  View →
+                </a>
+              </td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+    {{else}}
+      <div style="text-align: center; padding: 2.5rem; color: #94a3b8;">
+        <p style="margin-bottom: 1rem;">You haven't submitted any leave requests yet.</p>
+        <a href="/my/leave-requests/new" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">
+          Apply Now
+        </a>
+      </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

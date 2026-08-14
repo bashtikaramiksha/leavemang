@@ -1,0 +1,104 @@
+{{define "content"}}
+<div class="dashboard-container">
+  <div class="card" style="max-width: 1000px;">
+    <div class="header-row" style="margin-bottom: 1.5rem; align-items: center; justify-content: space-between;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--text-color); margin: 0;">Employee Directory</h2>
+        <p style="color: var(--text-muted); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+          Manage organization employees, roles, and status
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem;">← Home</a>
+        {{if .CanManage}}
+          <a href="/employees/new" class="btn btn-primary" style="padding: 0.5rem 1rem;">+ Add Employee</a>
+        {{end}}
+      </div>
+    </div>
+
+    {{if .FlashMessage}}
+      <div class="alert alert-success" style="margin-bottom: 1.25rem;">
+        {{.FlashMessage}}
+      </div>
+    {{end}}
+
+    <div style="margin-bottom: 1.25rem;">
+      <input 
+        type="text" 
+        id="employee-search" 
+        placeholder="Search by code, name, department, or email..." 
+        onkeyup="filterEmployees()"
+        style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem;"
+      >
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="table" id="employee-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Employees}}
+            <tr class="employee-row">
+              <td><strong style="font-family: monospace; color: var(--primary-color);">{{.EmployeeCode}}</strong></td>
+              <td><strong>{{.FullName}}</strong></td>
+              <td style="color: var(--text-muted);">{{.Email}}</td>
+              <td><span class="badge" style="background: rgba(255, 255, 255, 0.08); font-weight: 500;">{{.Department}}</span></td>
+              <td>{{.Designation}}</td>
+              <td><span class="badge badge-{{.Role}}">{{.Role}}</span></td>
+              <td>
+                {{if eq .Status "active"}}
+                  <span class="badge badge-active" style="background: #10b981; color: white;">Active</span>
+                {{else}}
+                  <span class="badge badge-inactive" style="background: #ef4444; color: white;">Inactive</span>
+                {{end}}
+              </td>
+              <td style="text-align: right; white-space: nowrap;">
+                <a href="/employees/{{.ID}}" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">View</a>
+                {{if $.CanManage}}
+                  <a href="/employees/{{.ID}}/edit" class="btn btn-primary" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">Edit</a>
+                  {{if eq .Status "active"}}
+                    <form hx-post="/employees/{{.ID}}/deactivate" style="display: inline; margin: 0;" hx-confirm="Are you sure you want to deactivate {{.FullName}}?">
+                      <button type="submit" class="btn btn-danger" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">Deactivate</button>
+                    </form>
+                  {{else}}
+                    <form hx-post="/employees/{{.ID}}/activate" style="display: inline; margin: 0;">
+                      <button type="submit" class="btn" style="padding: 0.35rem 0.65rem; font-size: 0.85rem; background-color: #10b981; color: white;">Activate</button>
+                    </form>
+                  {{end}}
+                {{end}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                No employees found.
+              </td>
+            </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterEmployees() {
+  const input = document.getElementById('employee-search').value.toLowerCase();
+  const rows = document.querySelectorAll('.employee-row');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(input) ? '' : 'none';
+  });
+}
+</script>
+{{end}}

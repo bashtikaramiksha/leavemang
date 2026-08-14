@@ -1,0 +1,96 @@
+{{define "content"}}
+<div class="dashboard-container">
+  <div class="card" style="max-width: 700px;">
+    <div class="header-row" style="margin-bottom: 1.5rem; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--text-color); margin: 0;">{{.Employee.FullName}}</h2>
+          <span class="badge" style="font-family: monospace; font-size: 0.9rem; background: var(--primary-color); color: white;">
+            {{.Employee.EmployeeCode}}
+          </span>
+        </div>
+        <p style="color: var(--text-muted); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+          {{.Employee.Designation}} • {{.Employee.Department}}
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        {{if .IsSelf}}
+          <a href="/" class="btn btn-secondary">← Back to Dashboard</a>
+        {{else}}
+          <a href="/employees" class="btn btn-secondary">← Back to List</a>
+          {{if .CanManage}}
+            <a href="/employees/{{.Employee.ID}}/edit" class="btn btn-primary">Edit Profile</a>
+          {{end}}
+        {{end}}
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 10px;">
+      <div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">First Name</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.FirstName}}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Email Address</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.Email}}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Department</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.Department}}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">System Role</span>
+          <div style="margin-top: 0.25rem;">
+            <span class="badge badge-{{.Employee.Role}}">{{.Employee.Role}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Last Name</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.LastName}}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{if .Employee.Phone}}{{.Employee.Phone}}{{else}}—{{end}}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Designation</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.Designation}}</div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Joining Date</span>
+          <div style="font-size: 1.05rem; font-weight: 600; margin-top: 0.25rem;">{{.Employee.JoiningDate}}</div>
+        </div>
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Employment Status</span>
+          <div style="margin-top: 0.25rem;">
+            {{if eq .Employee.Status "active"}}
+              <span class="badge badge-active" style="background: #10b981; color: white;">Active</span>
+            {{else}}
+              <span class="badge badge-inactive" style="background: #ef4444; color: white;">Inactive</span>
+            {{end}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{if and .CanManage (not .IsSelf)}}
+      <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+        {{if eq .Employee.Status "active"}}
+          <form hx-post="/employees/{{.Employee.ID}}/deactivate" hx-confirm="Are you sure you want to deactivate {{.Employee.FullName}}?">
+            <button type="submit" class="btn btn-danger">Deactivate Employee</button>
+          </form>
+        {{else}}
+          <form hx-post="/employees/{{.Employee.ID}}/activate">
+            <button type="submit" class="btn" style="background-color: #10b981; color: white;">Activate Employee</button>
+          </form>
+        {{end}}
+      </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

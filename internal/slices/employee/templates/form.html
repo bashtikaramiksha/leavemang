@@ -1,0 +1,155 @@
+{{define "content"}}
+<div class="dashboard-container">
+  <div class="card" style="max-width: 650px;">
+    <div class="header-row" style="margin-bottom: 1.5rem; align-items: center;">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-color); margin: 0;">
+          {{if .IsEdit}}Edit Employee: {{.Employee.EmployeeCode}}{{else}}Create New Employee{{end}}
+        </h2>
+        <p style="color: var(--text-muted); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+          {{if .IsEdit}}Update organizational details and access roles.{{else}}Enter new employee identity details and role assignment.{{end}}
+        </p>
+      </div>
+      <a href="/employees" class="btn btn-secondary" style="padding: 0.5rem 1rem;">← Back to List</a>
+    </div>
+
+    <div id="error-message">
+      {{if .Error}}
+        <div class="alert alert-danger" style="margin-bottom: 1.25rem;">
+          {{.Error}}
+        </div>
+      {{end}}
+    </div>
+
+    <form 
+      hx-post="{{if .IsEdit}}/employees/{{.Employee.ID}}{{else}}/employees{{end}}" 
+      hx-target="#error-message" 
+      hx-swap="innerHTML"
+    >
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label for="first_name" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">First Name *</label>
+          <input 
+            type="text" 
+            id="first_name" 
+            name="first_name" 
+            value="{{if .IsEdit}}{{.Employee.FirstName}}{{else}}{{.Input.FirstName}}{{end}}" 
+            required 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+        <div class="form-group">
+          <label for="last_name" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Last Name *</label>
+          <input 
+            type="text" 
+            id="last_name" 
+            name="last_name" 
+            value="{{if .IsEdit}}{{.Employee.LastName}}{{else}}{{.Input.LastName}}{{end}}" 
+            required 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label for="email" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Email Address *</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            value="{{if .IsEdit}}{{.Employee.Email}}{{else}}{{.Input.Email}}{{end}}" 
+            required 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+        <div class="form-group">
+          <label for="phone" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Phone Number</label>
+          <input 
+            type="text" 
+            id="phone" 
+            name="phone" 
+            value="{{if .IsEdit}}{{.Employee.Phone}}{{else}}{{.Input.Phone}}{{end}}" 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div class="form-group">
+          <label for="department" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Department *</label>
+          <input 
+            type="text" 
+            id="department" 
+            name="department" 
+            value="{{if .IsEdit}}{{.Employee.Department}}{{else}}{{.Input.Department}}{{end}}" 
+            required 
+            placeholder="e.g. IT, HR, Sales"
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+        <div class="form-group">
+          <label for="designation" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Designation *</label>
+          <input 
+            type="text" 
+            id="designation" 
+            name="designation" 
+            value="{{if .IsEdit}}{{.Employee.Designation}}{{else}}{{.Input.Designation}}{{end}}" 
+            required 
+            placeholder="e.g. Software Engineer"
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="form-group">
+          <label for="joining_date" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Joining Date *</label>
+          <input 
+            type="date" 
+            id="joining_date" 
+            name="joining_date" 
+            value="{{if .IsEdit}}{{.Employee.JoiningDate}}{{else}}{{.Input.JoiningDate}}{{end}}" 
+            required 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px;"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="role" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">System Role *</label>
+          <select 
+            id="role" 
+            name="role" 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--card-bg, #fff); color: var(--text-color, #000);"
+          >
+            <option value="employee" {{if eq (if .IsEdit .Employee.Role .Input.Role) "employee"}}selected{{end}}>Employee</option>
+            <option value="manager" {{if eq (if .IsEdit .Employee.Role .Input.Role) "manager"}}selected{{end}}>Manager</option>
+            <option value="admin" {{if eq (if .IsEdit .Employee.Role .Input.Role) "admin"}}selected{{end}}>Admin</option>
+          </select>
+        </div>
+      </div>
+
+      {{if .IsEdit}}
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="status" style="font-weight: 600; display: block; margin-bottom: 0.4rem;">Employment Status *</label>
+          <select 
+            id="status" 
+            name="status" 
+            style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--card-bg, #fff); color: var(--text-color, #000);"
+          >
+            <option value="active" {{if eq .Employee.Status "active"}}selected{{end}}>Active</option>
+            <option value="inactive" {{if eq .Employee.Status "inactive"}}selected{{end}}>Inactive</option>
+          </select>
+        </div>
+      {{end}}
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+        <a href="/employees" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">
+          {{if .IsEdit}}Save Changes{{else}}Create Employee{{end}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}

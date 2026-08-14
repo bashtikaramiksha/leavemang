@@ -1,0 +1,28 @@
+{{define "content"}}
+<div class="container">
+  <div class="card">
+    <h1 class="card-title">Leave Management</h1>
+    <p class="card-subtitle">Sign in to access your account</p>
+
+    <div id="error-message">
+      {{if .Error}}
+        <div class="alert alert-danger">{{.Error}}</div>
+      {{end}}
+    </div>
+
+    <form hx-post="/login" hx-target="#error-message" hx-swap="outerHTML">
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" class="form-input" placeholder="Enter your username" required autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Sign In</button>
+    </form>
+  </div>
+</div>
+{{end}}

@@ -1,0 +1,52 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 800px;">
+  <div class="card">
+    <div class="header-row" style="margin-bottom: 1.5rem; align-items: center; justify-content: space-between;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--text-main); margin: 0;">My Leave Balance</h2>
+        <p style="color: var(--text-muted); margin: 0.25rem 0 0 0; font-size: 0.9rem;">
+          {{if .Employee}}{{.Employee.FullName}} ({{.Employee.EmployeeCode}}) • {{.Employee.Department}}{{end}}
+        </p>
+      </div>
+      <div>
+        <a href="/" class="nav-link">← Home</a>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+      {{range .Balances}}
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; transition: transform 0.2s ease, border-color 0.2s ease;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin: 0;">{{.LeaveTypeName}}</h3>
+            <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; font-family: monospace;">{{.LeaveTypeCode}}</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+            <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
+              <span>Allocated:</span>
+              <strong style="color: var(--text-main);">{{.AllocatedDays}} days</strong>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; color: var(--text-muted);">
+              <span>Used:</span>
+              <strong style="color: var(--text-main);">{{.UsedDays}} days</strong>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
+              <span style="font-weight: 600; color: var(--text-main);">Remaining:</span>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); font-size: 0.9rem; padding: 0.3rem 0.7rem;">
+                {{.Remaining}} days
+              </span>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px dashed var(--border-color);">
+          <p style="font-size: 1rem; margin-bottom: 0.5rem;">No leave allocations found for your account.</p>
+          <p style="font-size: 0.85rem;">Please contact your HR Administrator to configure your leave allocations.</p>
+        </div>
+      {{end}}
+    </div>
+  </div>
+</div>
+{{end}}

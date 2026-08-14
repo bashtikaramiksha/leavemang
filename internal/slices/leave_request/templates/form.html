@@ -1,0 +1,120 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 680px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0;">Apply for Leave</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Submit a new leave application for approval
+        </p>
+      </div>
+      <a href="/my/leave-requests" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← My Requests</a>
+    </div>
+
+    {{if .Error}}
+    <div class="alert alert-danger" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 0.85rem 1.15rem; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+      <span style="font-size: 1.1rem;">⚠️</span>
+      <span>{{.Error}}</span>
+    </div>
+    {{end}}
+
+    <form action="/my/leave-requests" method="POST" id="leaveForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <!-- Leave Type Selection -->
+      <div class="form-group">
+        <label for="leave_type_id" style="display: block; font-weight: 600; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">
+          Leave Type <span style="color: #f87171;">*</span>
+        </label>
+        <select id="leave_type_id" name="leave_type_id" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); color: #f8fafc; font-size: 0.95rem;">
+          <option value="" disabled {{if eq .Input.LeaveTypeID 0}}selected{{end}}>-- Select Leave Type --</option>
+          {{range .LeaveTypes}}
+            <option value="{{.ID}}" {{if eq $.Input.LeaveTypeID .ID}}selected{{end}}>{{.Name}} ({{.Code}})</option>
+          {{end}}
+        </select>
+      </div>
+
+      <!-- Current Available Balances Indicator -->
+      <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem;">
+        <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Your Available Balances:</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+          {{range .Balances}}
+            <span class="badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.85rem;">
+              <strong>{{.LeaveTypeName}}</strong>: <span style="color: #6ee7b7; font-weight: 700;">{{.Remaining}} days</span>
+            </span>
+          {{else}}
+            <span style="font-size: 0.85rem; color: var(--text-muted);">No leave allocations found.</span>
+          {{end}}
+        </div>
+      </div>
+
+      <!-- Dates Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="from_date" style="display: block; font-weight: 600; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">
+            From Date <span style="color: #f87171;">*</span>
+          </label>
+          <input type="date" id="from_date" name="from_date" value="{{.Input.FromDate}}" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); color: #f8fafc; font-size: 0.95rem;">
+        </div>
+
+        <div class="form-group">
+          <label for="to_date" style="display: block; font-weight: 600; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">
+            To Date <span style="color: #f87171;">*</span>
+          </label>
+          <input type="date" id="to_date" name="to_date" value="{{.Input.ToDate}}" required style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); color: #f8fafc; font-size: 0.95rem;">
+        </div>
+      </div>
+
+      <!-- Calculated Days Badge -->
+      <div id="daysCalculator" style="background: rgba(99, 102, 241, 0.1); border: 1px dashed rgba(99, 102, 241, 0.4); border-radius: 10px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.9rem; color: #a5b4fc; font-weight: 500;">Calculated Duration:</span>
+        <strong id="requestedDaysDisplay" style="font-size: 1.1rem; color: #6366f1;">0 days</strong>
+      </div>
+
+      <!-- Reason Field -->
+      <div class="form-group">
+        <label for="reason" style="display: block; font-weight: 600; color: #cbd5e1; margin-bottom: 0.5rem; font-size: 0.9rem;">
+          Reason for Leave <span style="color: #f87171;">*</span>
+        </label>
+        <textarea id="reason" name="reason" rows="3" required placeholder="Describe the reason for your leave request..." style="width: 100%; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); color: #f8fafc; font-size: 0.95rem; font-family: inherit; resize: vertical;">{{.Input.Reason}}</textarea>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 0.5rem;">
+        <a href="/my/leave-requests" class="btn btn-secondary" style="padding: 0.75rem 1.25rem; border-radius: 10px; text-decoration: none;">Cancel</a>
+        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #4f46e5); border: none; color: #ffffff; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);">
+          Submit Leave Request
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function updateDays() {
+    const fromVal = document.getElementById('from_date').value;
+    const toVal = document.getElementById('to_date').value;
+    const display = document.getElementById('requestedDaysDisplay');
+    
+    if (fromVal && toVal) {
+      const fromDate = new Date(fromVal);
+      const toDate = new Date(toVal);
+      if (fromDate <= toDate) {
+        const diffTime = Math.abs(toDate - fromDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        display.textContent = diffDays + (diffDays === 1 ? ' day' : ' days');
+        display.style.color = '#6366f1';
+        return;
+      } else {
+        display.textContent = 'Invalid dates (Start > End)';
+        display.style.color = '#f87171';
+        return;
+      }
+    }
+    display.textContent = 'Select dates';
+    display.style.color = '#a5b4fc';
+  }
+
+  document.getElementById('from_date').addEventListener('change', updateDays);
+  document.getElementById('to_date').addEventListener('change', updateDays);
+  updateDays();
+</script>
+{{end}}

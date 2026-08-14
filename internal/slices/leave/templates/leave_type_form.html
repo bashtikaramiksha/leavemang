@@ -1,0 +1,88 @@
+{{define "content"}}
+<div class="container">
+  <div class="card">
+    <h2 class="card-title">{{if .IsEdit}}Edit Leave Type{{else}}Create Leave Type{{end}}</h2>
+    <p class="card-subtitle">
+      {{if .IsEdit}}Update configured leave category rules{{else}}Define a new leave category for the organization{{end}}
+    </p>
+
+    {{if .Error}}
+      <div class="alert alert-danger" style="margin-bottom: 1.25rem;">
+        {{.Error}}
+      </div>
+    {{end}}
+
+    <form method="POST" action="{{if .IsEdit}}/leave-types/{{.LeaveType.ID}}{{else}}/leave-types{{end}}" hx-target="#form-error" hx-swap="innerHTML">
+      <div id="form-error"></div>
+
+      <div class="form-group">
+        <label for="code" class="form-label">Leave Code *</label>
+        <input 
+          type="text" 
+          id="code" 
+          name="code" 
+          class="form-input" 
+          placeholder="e.g. CL, SL, EL" 
+          value="{{if .IsEdit}}{{.LeaveType.Code}}{{else}}{{.Input.Code}}{{end}}" 
+          required 
+          style="text-transform: uppercase;"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="name" class="form-label">Leave Name *</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          class="form-input" 
+          placeholder="e.g. Casual Leave" 
+          value="{{if .IsEdit}}{{.LeaveType.Name}}{{else}}{{.Input.Name}}{{end}}" 
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <textarea 
+          id="description" 
+          name="description" 
+          class="form-input" 
+          rows="3" 
+          placeholder="Brief description of leave policy..."
+        >{{if .IsEdit}}{{.LeaveType.Description}}{{else}}{{.Input.Description}}{{end}}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="default_allocation" class="form-label">Default Allocation (Days) *</label>
+        <input 
+          type="number" 
+          id="default_allocation" 
+          name="default_allocation" 
+          class="form-input" 
+          min="0" 
+          value="{{if .IsEdit}}{{.LeaveType.DefaultAllocation}}{{else}}{{.Input.DefaultAllocation}}{{end}}" 
+          required
+        >
+      </div>
+
+      {{if .IsEdit}}
+        <div class="form-group">
+          <label for="status" class="form-label">Status *</label>
+          <select id="status" name="status" class="form-input">
+            <option value="active" {{if eq .LeaveType.Status "active"}}selected{{end}}>Active</option>
+            <option value="inactive" {{if eq .LeaveType.Status "inactive"}}selected{{end}}>Inactive</option>
+          </select>
+        </div>
+      {{end}}
+
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <a href="/leave-types" class="btn btn-danger" style="text-align: center;">Cancel</a>
+        <button type="submit" class="btn btn-primary">
+          {{if .IsEdit}}Save Changes{{else}}Create Leave Type{{end}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{{end}}

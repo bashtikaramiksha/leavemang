@@ -1,0 +1,30 @@
+{{define "content"}}
+<div class="dashboard-container">
+  <div class="card">
+    <div class="header-row">
+      <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Manager Portal</h2>
+        <div style="margin-top: 0.5rem;">
+          <span class="badge badge-manager">Role: {{.User.Role}}</span>
+        </div>
+      </div>
+      <form hx-post="/logout" style="margin: 0;">
+        <button type="submit" class="btn btn-danger">Logout</button>
+      </form>
+    </div>
+
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+      Welcome to the Manager area, {{.User.Username}}. View organization employees and manage team requests.
+    </p>
+
+    <div class="portal-nav" style="margin-bottom: 1.5rem;">
+      <a href="/employees" class="nav-link" style="border-color: var(--primary-color); font-weight: 600;">👥 Employees Directory</a>
+      <a href="/profile" class="nav-link">👤 My Profile</a>
+    </div>
+
+    <div class="portal-nav">
+      <a href="/" class="nav-link">← Back to Main Home</a>
+    </div>
+  </div>
+</div>
+{{end}}

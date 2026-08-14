@@ -1,0 +1,147 @@
+{{define "content"}}
+<div class="dashboard-container" style="max-width: 700px; margin: 2rem auto;">
+  <div class="card" style="background: rgba(30, 41, 59, 0.75); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+    <div class="header-row" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin: 0;">Review Leave Request #{{.Request.ID}}</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+          Submitted by {{.Request.EmployeeName}} on {{.Request.CreatedAt.Format "02 Jan 2006, 15:04"}}
+        </p>
+      </div>
+      <a href="/manager/leave-requests" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; text-decoration: none;">← Pending Requests</a>
+    </div>
+
+    {{if .Error}}
+      <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 0.9rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500;">
+        ⚠️ {{.Error}}
+      </div>
+    {{end}}
+
+    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+        <span style="color: var(--text-muted); font-size: 0.9rem;">Status:</span>
+        {{if eq .Request.Status "Pending"}}
+          <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ⏳ Pending Decision
+          </span>
+        {{else if eq .Request.Status "Approved"}}
+          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ✓ Approved
+          </span>
+        {{else if eq .Request.Status "Rejected"}}
+          <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem;">
+            ✕ Rejected
+          </span>
+        {{end}}
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Employee Name</span>
+          <strong style="color: #f8fafc; font-size: 1.05rem;">{{.Request.EmployeeName}}</strong>
+        </div>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Employee Code & Dept</span>
+          <span style="color: #a5b4fc; font-family: monospace; font-size: 0.95rem;">{{.Request.EmployeeCode}} • {{.Request.Department}}</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Leave Type</span>
+          <strong style="color: #f8fafc; font-size: 1rem;">{{.Request.LeaveTypeName}} ({{.Request.LeaveTypeCode}})</strong>
+        </div>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Requested Duration</span>
+          <strong style="color: #6366f1; font-size: 1.05rem;">{{.Request.Days}} {{if eq .Request.Days 1}}day{{else}}days{{end}}</strong>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">From Date</span>
+          <span style="color: #cbd5e1; font-weight: 500;">{{.Request.FromDate}}</span>
+        </div>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">To Date</span>
+          <span style="color: #cbd5e1; font-weight: 500;">{{.Request.ToDate}}</span>
+        </div>
+      </div>
+
+      <div>
+        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Reason for Leave</span>
+        <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); padding: 0.85rem 1rem; border-radius: 8px; color: #cbd5e1; font-size: 0.95rem;">
+          {{.Request.Reason}}
+        </div>
+      </div>
+
+      <!-- Balance Impact Summary (Section 11) -->
+      <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: 10px; padding: 1rem; display: flex; justify-content: space-around; align-items: center; text-align: center;">
+        <div>
+          <span style="display: block; font-size: 0.8rem; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.05em;">Current Available</span>
+          <span style="font-size: 1.25rem; font-weight: 700; color: #f8fafc;">{{.CurrentBalance}} days</span>
+        </div>
+        <div style="font-size: 1.5rem; color: #6366f1;">→</div>
+        <div>
+          <span style="display: block; font-size: 0.8rem; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.05em;">After Approval</span>
+          <span style="font-size: 1.25rem; font-weight: 700; color: {{if lt .ProjectedBalance 0}}#fca5a5{{else}}#34d399{{end}};">
+            {{.ProjectedBalance}} days
+          </span>
+        </div>
+      </div>
+
+      {{if eq .Request.Status "Rejected"}}
+        {{if .Request.RejectionReason.Valid}}
+        <div>
+          <span style="display: block; font-size: 0.85rem; color: #fca5a5; margin-bottom: 0.25rem;">Rejection Reason</span>
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.85rem 1rem; border-radius: 8px; color: #fca5a5; font-size: 0.95rem;">
+            {{.Request.RejectionReason.String}}
+          </div>
+        </div>
+        {{end}}
+      {{end}}
+    </div>
+
+    {{if eq .Request.Status "Pending"}}
+      <!-- Action Options for Manager -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <!-- Approve Form -->
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h4 style="margin: 0 0 0.5rem 0; color: #34d399; font-size: 1.1rem; font-weight: 600;">Approve Request</h4>
+            <p style="color: #a7f3d0; font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.4;">
+              Approving will deduct <strong>{{.Request.Days}} days</strong> from employee's leave balance.
+            </p>
+          </div>
+          <form method="POST" action="/manager/leave-requests/{{.Request.ID}}/approve">
+            <button type="submit" class="btn" style="width: 100%; padding: 0.65rem 1rem; font-size: 0.9rem; font-weight: 600; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; cursor: pointer;">
+              ✓ Confirm Approval
+            </button>
+          </form>
+        </div>
+
+        <!-- Reject Form -->
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 12px; padding: 1.25rem;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #f87171; font-size: 1.1rem; font-weight: 600;">Reject Request</h4>
+          <form method="POST" action="/manager/leave-requests/{{.Request.ID}}/reject">
+            <div style="margin-bottom: 1rem;">
+              <label for="rejection_reason" style="display: block; font-size: 0.8rem; color: #fca5a5; margin-bottom: 0.35rem;">Reason for Rejection *</label>
+              <textarea id="rejection_reason" name="rejection_reason" rows="2" required placeholder="Enter rejection explanation..." style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; padding: 0.5rem; color: white; font-size: 0.85rem; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; padding: 0.65rem 1rem; font-size: 0.9rem; font-weight: 600; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 8px; cursor: pointer;">
+              ✕ Confirm Rejection
+            </button>
+          </form>
+        </div>
+      </div>
+    {{else}}
+      <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        ℹ️ Decision recorded. This leave request has already been finalized and cannot be modified again.
+      </div>
+    {{end}}
+  </div>
+</div>
+{{end}}
